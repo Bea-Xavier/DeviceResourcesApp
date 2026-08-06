@@ -14,17 +14,17 @@ const ImagePickerComponent = () => {
         }
 
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaType.Images,
             allowsEditing: true,
             quality: 1,
         });
 
-        if (result.cancelled) {
+        if (result.canceled) {
             Alert.alert('Operação Cancelada', 'Você cancelou a seleção de imagem.');
             return;
         }
 
-        setImageUri(result.uri);
+        setImageUri(result.assets[0].uri);
     };
 
     return(
