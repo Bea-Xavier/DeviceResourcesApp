@@ -36,7 +36,7 @@ const ContactsComponent = () => {
     const renderItem = ({ item }) => (
         <View style={styles.contactItem}>
             <Text style={styles.contactName}>
-                {item.firstName} {item.LastName}
+                {item.firstName} {item.middleName} {item.lastName}
             </Text>
 
             {item.phoneNumbers && item.phoneNumbers.map((phone, index) => (
