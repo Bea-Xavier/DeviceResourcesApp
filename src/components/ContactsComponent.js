@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Button, Alert, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import * as Contacts from 'expo-contacts/legacy';
 
 const ContactsComponent = () => {
@@ -29,12 +29,34 @@ const ContactsComponent = () => {
         }
     };
 
+    const callTo = async (number) => {
+        if (!number) {
+            Alert.alert('Sem número', 'Este contato não possui número de telefone.');
+            return;
+        }
+
+        // Remove espaços e caracteres estranhos, mantendo apenas números e o "+"
+        const numberFormatted = number.replace(/[^0-9+]/g, '');
+        const url = `tel:${numberFormatted}`;
+
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            Linking.openURL(url);
+        } else {
+            Alert.alert('Erro', 'Não foi possível abrir o discador neste dispositivo.');
+        }
+    };
+
     useEffect(() => {
         loadContacts();
     }, []);
 
     const renderItem = ({ item }) => (
-        <View style={styles.contactItem}>
+        <TouchableOpacity
+            style={styles.contactItem}
+            onPress={() => callTo(item.phoneNumbers?.[0]?.number)}
+        >
             <Text style={styles.contactName}>
                 {item.firstName} {item.middleName} {item.lastName}
             </Text>
@@ -50,7 +72,7 @@ const ContactsComponent = () => {
                     📧 {email.email}
                 </Text>
             ))}
-        </View>
+        </TouchableOpacity>
     );
 
     return (
